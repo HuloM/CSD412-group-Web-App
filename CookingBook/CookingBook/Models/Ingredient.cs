@@ -8,12 +8,10 @@ namespace CookingBook.Models
 {
     public class Ingredient
     {
-
-        [Required]
+        [Key]
+        public int Id { get; set; }
         public string Name { get; set; }
-        [Required]
         public double Amount { get; set; }
-        [Required]
         public string Unit { get; set; }
     }
 }

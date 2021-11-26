@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CookingBook.Models;
 
 namespace CookingBook.Data
 {
@@ -12,5 +13,6 @@ namespace CookingBook.Data
             : base(options)
         {
         }
+        public DbSet<Recipe> Recipe { get; set; }
     }
 }

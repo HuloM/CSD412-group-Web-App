@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace CookingBook.Models
 {
-    public class User
+    public class Instruction
     {
         public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public IEnumerable<Recipe> RecipeBook {get; set;}
-
+        public string InstructionText { get; set; }
     }
 }

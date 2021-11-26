@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace CookingBook.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public IEnumerable<string> Instructions { get; set; }
+        public IEnumerable<Instruction> Instructions { get; set; }
         [Required]
         public IEnumerable<Ingredient> Ingredients { get; set; } //needs to be a collection 
         public int TotalTime { get; set; } //optional
