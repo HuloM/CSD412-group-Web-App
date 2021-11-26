@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,6 @@ namespace CookingBook.Data
             : base(options)
         {
         }
-        public DbSet<CookingBook.Models.Recipe> Recipe { get; set; }
+        public DbSet<Recipe> Recipe { get; set; }
     }
 }
