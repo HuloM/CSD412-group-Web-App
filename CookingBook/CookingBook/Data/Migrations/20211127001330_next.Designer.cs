@@ -4,14 +4,16 @@ using CookingBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CookingBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211127001330_next")]
+    partial class next
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +78,12 @@ namespace CookingBook.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstructionID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")

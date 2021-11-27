@@ -20,9 +20,57 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.Recipe.ToListAsync());
+            var viewModel = new RecipeIndexData();
+            viewModel.Recipes = await _context.Recipe
+                  .Include(i => i.Name)
+                  .Include(i => i.TotalTime)
+                  .Include(i => i.Difficulty)
+                  .Include(i => i.DateCreated)
+                  .Include(i => i.Ingredients)
+                        .ThenInclude(i => i.Name)
+                  .Include(i => i.Ingredients)
+                        .ThenInclude(i => i.Amount)
+                  .Include(i => i.Ingredients)
+                        .ThenInclude(i => i.Unit)
+                  .Include(i => i.Instructions)
+                    .ThenInclude(i => i.InstructionText)
+                  .AsNoTracking()
+                  .OrderBy(i => i.DateCreated)
+                  .ToListAsync();
+
+            //if (id != null)
+            //{
+            //    ViewData["InstructorID"] = id.Value;
+            //    Instructor instructor = viewModel.Instructors.Where(
+            //        i => i.ID == id.Value).Single();
+            //    viewModel.Courses = instructor.CourseAssignments.Select(s => s.Course);
+            //}
+            if (id != null)
+            {
+                ViewData["RecipeID"] = id.Value;
+                Recipe recipe = viewModel.Recipes.Where(
+                    i => i.RecipeID == id.Value).Single();
+                viewModel.Ingredients = recipe.Ingredients;
+                viewModel.Instructions = recipe.Instructions;
+            }
+
+            //if (courseID != null)
+            //{
+            //    ViewData["CourseID"] = courseID.Value;
+            //    viewModel.Enrollments = viewModel.Courses.Where(
+            //        x => x.CourseID == courseID).Single().Enrollments;
+            //}
+
+            //if (instructionID != null)
+            //{
+            //    ViewData["InstructionID"] = instructionID.Value;
+            //    viewModel.Instructions = viewModel.Instructions.Where(
+            //        x => x.InstructionID == instructionID).Single().Instructions;
+            //}
+
+            return View(viewModel);
         }
 
         // GET: Recipes/Details/5
@@ -34,7 +82,7 @@ namespace CookingBook.Controllers
             }
 
             var recipe = await _context.Recipe
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.RecipeID == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -54,7 +102,7 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +134,9 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
         {
-            if (id != recipe.Id)
+            if (id != recipe.RecipeID)
             {
                 return NotFound();
             }
@@ -102,7 +150,7 @@ namespace CookingBook.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RecipeExists(recipe.Id))
+                    if (!RecipeExists(recipe.RecipeID))
                     {
                         return NotFound();
                     }
@@ -125,7 +173,7 @@ namespace CookingBook.Controllers
             }
 
             var recipe = await _context.Recipe
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.RecipeID == id);
             if (recipe == null)
             {
                 return NotFound();
@@ -147,7 +195,7 @@ namespace CookingBook.Controllers
 
         private bool RecipeExists(int id)
         {
-            return _context.Recipe.Any(e => e.Id == id);
+            return _context.Recipe.Any(e => e.RecipeID == id);
         }
     }
 }

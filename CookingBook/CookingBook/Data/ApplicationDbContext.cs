@@ -13,6 +13,6 @@ namespace CookingBook.Data
             : base(options)
         {
         }
-        public DbSet<Recipe> Recipe { get; set; }
+        public DbSet<CookingBook.Models.Recipe> Recipe { get; set; }
     }
 }
