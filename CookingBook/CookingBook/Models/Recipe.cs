@@ -19,10 +19,13 @@ namespace CookingBook.Models
         public DateTime DateCreated { get; set; }//optional
 
 
-        //[Required]     
-        public ICollection<Instruction> Instructions { get; set; }
         //[Required]
-        public ICollection<Ingredient> Ingredients { get; set; } //needs to be a collection 
+        [Display(Name ="Instructions")]
+        public Instruction Instructions { get; set; }
+
+        //[Required]
+        [Display(Name = "Ingredients")]
+        public Ingredient Ingredients { get; set; } //needs to be a collection 
 
 
     }
