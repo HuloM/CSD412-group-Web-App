@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.DisplayNameFor(modelItem => item.Ingredients.ingredient)
+                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
-                @Html.DisplayNameFor(modelItem => item.Instructions.InstructionText)
+                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
