@@ -4,14 +4,16 @@ using CookingBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CookingBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211127000703_RecipeCntrollerAdded")]
+    partial class RecipeCntrollerAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +34,7 @@ namespace CookingBook.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecipeID")
+                    b.Property<int?>("RecipeID")
                         .HasColumnType("int");
 
                     b.Property<string>("Unit")
@@ -55,7 +57,7 @@ namespace CookingBook.Data.Migrations
                     b.Property<string>("InstructionText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecipeID")
+                    b.Property<int?>("RecipeID")
                         .HasColumnType("int");
 
                     b.HasKey("InstructionID");
@@ -76,6 +78,12 @@ namespace CookingBook.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IngredientID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstructionID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -293,18 +301,14 @@ namespace CookingBook.Data.Migrations
                 {
                     b.HasOne("CookingBook.Models.Recipe", null)
                         .WithMany("Ingredients")
-                        .HasForeignKey("RecipeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeID");
                 });
 
             modelBuilder.Entity("CookingBook.Models.Instruction", b =>
                 {
                     b.HasOne("CookingBook.Models.Recipe", null)
                         .WithMany("Instructions")
-                        .HasForeignKey("RecipeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
