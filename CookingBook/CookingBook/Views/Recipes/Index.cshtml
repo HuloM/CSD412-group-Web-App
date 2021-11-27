@@ -49,9 +49,13 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
+                @*info section for ingredients
+                  points the user to details page to view ingredients string*@
                 <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
+                @*info sectiont for instructions
+                  points the user to details page to view instructions string*@
                 <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
