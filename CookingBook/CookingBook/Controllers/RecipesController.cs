@@ -22,7 +22,10 @@ namespace CookingBook.Controllers
         // GET: Recipes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Recipe.ToListAsync());
+            return View(await _context.Recipe
+                .Include(r => r.Instructions)
+                .Include(r => r.Ingredients)
+                .ToListAsync());
         }
 
         // GET: Recipes/Details/5
@@ -34,6 +37,9 @@ namespace CookingBook.Controllers
             }
 
             var recipe = await _context.Recipe
+                .Include(r => r.Instructions)
+                .Include(r => r.Ingredients)
+
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
             if (recipe == null)
             {

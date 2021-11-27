@@ -49,14 +49,14 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.Ingredients)
+                @Html.DisplayNameFor(modelItem => item.Ingredients.ingredient)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.Instructions)
+                @Html.DisplayNameFor(modelItem => item.Instructions.InstructionText)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
                 <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
             </td>
         </tr>
