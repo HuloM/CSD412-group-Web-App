@@ -10,25 +10,22 @@ using CookingBook.Models;
 
 namespace CookingBook.Controllers
 {
-    public class RecipesController : Controller
+    public class InstructionsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public RecipesController(ApplicationDbContext context)
+        public InstructionsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Recipes
+        // GET: Instructions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Recipe
-                .Include(r => r.Instructions)
-                .Include(r => r.Ingredients)
-                .ToListAsync());
+            return View(await _context.Instruction.ToListAsync());
         }
 
-        // GET: Recipes/Details/5
+        // GET: Instructions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,42 +33,39 @@ namespace CookingBook.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe
-                .Include(r => r.Instructions)
-                .Include(r => r.Ingredients)
-
-                .FirstOrDefaultAsync(m => m.RecipeID == id);
-            if (recipe == null)
+            var instruction = await _context.Instruction
+                .FirstOrDefaultAsync(m => m.InstructionID == id);
+            if (instruction == null)
             {
                 return NotFound();
             }
 
-            return View(recipe);
+            return View(instruction);
         }
 
-        // GET: Recipes/Create
+        // GET: Instructions/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Recipes/Create
+        // POST: Instructions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Instructions")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("InstructionID,RecipeID,InstructionText")] Instruction instruction)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(recipe);
+                _context.Add(instruction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(recipe);
+            return View(instruction);
         }
 
-        // GET: Recipes/Edit/5
+        // GET: Instructions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,22 +73,22 @@ namespace CookingBook.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe.FindAsync(id);
-            if (recipe == null)
+            var instruction = await _context.Instruction.FindAsync(id);
+            if (instruction == null)
             {
                 return NotFound();
             }
-            return View(recipe);
+            return View(instruction);
         }
 
-        // POST: Recipes/Edit/5
+        // POST: Instructions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("InstructionID,RecipeID,InstructionText")] Instruction instruction)
         {
-            if (id != recipe.RecipeID)
+            if (id != instruction.InstructionID)
             {
                 return NotFound();
             }
@@ -103,12 +97,12 @@ namespace CookingBook.Controllers
             {
                 try
                 {
-                    _context.Update(recipe);
+                    _context.Update(instruction);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RecipeExists(recipe.RecipeID))
+                    if (!InstructionExists(instruction.InstructionID))
                     {
                         return NotFound();
                     }
@@ -119,10 +113,10 @@ namespace CookingBook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(recipe);
+            return View(instruction);
         }
 
-        // GET: Recipes/Delete/5
+        // GET: Instructions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,30 +124,30 @@ namespace CookingBook.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe
-                .FirstOrDefaultAsync(m => m.RecipeID == id);
-            if (recipe == null)
+            var instruction = await _context.Instruction
+                .FirstOrDefaultAsync(m => m.InstructionID == id);
+            if (instruction == null)
             {
                 return NotFound();
             }
 
-            return View(recipe);
+            return View(instruction);
         }
 
-        // POST: Recipes/Delete/5
+        // POST: Instructions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var recipe = await _context.Recipe.FindAsync(id);
-            _context.Recipe.Remove(recipe);
+            var instruction = await _context.Instruction.FindAsync(id);
+            _context.Instruction.Remove(instruction);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RecipeExists(int id)
+        private bool InstructionExists(int id)
         {
-            return _context.Recipe.Any(e => e.RecipeID == id);
+            return _context.Instruction.Any(e => e.InstructionID == id);
         }
     }
 }

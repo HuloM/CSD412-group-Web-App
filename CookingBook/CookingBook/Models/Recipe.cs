@@ -14,16 +14,30 @@ namespace CookingBook.Models
        // [Required]
         public string Name { get; set; }
         public int TotalTime { get; set; } //optional
-        public enum DifficultyType { Easy, Moderate, Difficult, Expert } //optional
+
+        [EnumDataType(typeof(DifficultyType)), Display(Name = "Difficulty")]
         public DifficultyType Difficulty { get; set; }
         public DateTime DateCreated { get; set; }//optional
 
 
-        //[Required]     
-        public ICollection<Instruction> Instructions { get; set; }
         //[Required]
-        public ICollection<Ingredient> Ingredients { get; set; } //needs to be a collection 
+        [Display(Name ="Instructions")]
+        public Instruction Instructions { get; set; }
+
+        //[Required]
+        [Display(Name = "Ingredients")]
+        public Ingredient Ingredients { get; set; } //needs to be a collection 
 
 
     }
+    public enum DifficultyType { 
+        [Display(Name = "Easy")]
+        Easy,
+        [Display(Name = "Moderate")]
+        Moderate,
+        [Display(Name = "difficult")]
+        Difficult,
+        [Display(Name = "Expert")]
+        Expert 
+    } //optional
 }
