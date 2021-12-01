@@ -14,8 +14,8 @@ namespace CookingBook.Models
        // [Required]
         public string Name { get; set; }
         public int TotalTime { get; set; } //optional
+        public enum DifficultyType { Easy, Moderate, Difficult, Expert } //optional
 
-        [EnumDataType(typeof(DifficultyType)), Display(Name = "Difficulty")]
         public DifficultyType Difficulty { get; set; }
         public DateTime DateCreated { get; set; }//optional
 
@@ -30,14 +30,4 @@ namespace CookingBook.Models
 
 
     }
-    public enum DifficultyType { 
-        [Display(Name = "Easy")]
-        Easy,
-        [Display(Name = "Moderate")]
-        Moderate,
-        [Display(Name = "difficult")]
-        Difficult,
-        [Display(Name = "Expert")]
-        Expert 
-    } //optional
 }
