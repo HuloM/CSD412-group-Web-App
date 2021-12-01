@@ -18,5 +18,20 @@ namespace CookingBookTest
             Assert.Equal(3, ingredient.RecipeID);
             Assert.Equal("Mint", ingredient.ingredient);
         }
+
+        [Theory]
+        [InlineData(1, 3, "Mint")]
+        public void IngredientTest2(int IngredientID, int RecipeID, string ingredientString)
+        {
+            Ingredient ingredient = new Ingredient();
+            ingredient.IngredientID = IngredientID;
+            ingredient.RecipeID = RecipeID;
+            ingredient.ingredient = ingredientString;
+
+            Assert.Equal(1, ingredient.IngredientID);
+            Assert.Equal(3, ingredient.RecipeID);
+            Assert.Equal("Mint", ingredient.ingredient);
+        }
+
     }
 }
