@@ -4,14 +4,16 @@ using CookingBook.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CookingBook.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211127001744_newInitial")]
+    partial class newInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,16 +28,21 @@ namespace CookingBook.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RecipeID")
                         .HasColumnType("int");
 
-                    b.Property<string>("ingredient")
+                    b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IngredientID");
 
-                    b.HasIndex("RecipeID")
-                        .IsUnique();
+                    b.HasIndex("RecipeID");
 
                     b.ToTable("Ingredient");
                 });
@@ -55,8 +62,7 @@ namespace CookingBook.Data.Migrations
 
                     b.HasKey("InstructionID");
 
-                    b.HasIndex("RecipeID")
-                        .IsUnique();
+                    b.HasIndex("RecipeID");
 
                     b.ToTable("Instruction");
                 });
@@ -288,8 +294,8 @@ namespace CookingBook.Data.Migrations
             modelBuilder.Entity("CookingBook.Models.Ingredient", b =>
                 {
                     b.HasOne("CookingBook.Models.Recipe", null)
-                        .WithOne("Ingredients")
-                        .HasForeignKey("CookingBook.Models.Ingredient", "RecipeID")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("RecipeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -297,8 +303,8 @@ namespace CookingBook.Data.Migrations
             modelBuilder.Entity("CookingBook.Models.Instruction", b =>
                 {
                     b.HasOne("CookingBook.Models.Recipe", null)
-                        .WithOne("Instructions")
-                        .HasForeignKey("CookingBook.Models.Instruction", "RecipeID")
+                        .WithMany("Instructions")
+                        .HasForeignKey("RecipeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
