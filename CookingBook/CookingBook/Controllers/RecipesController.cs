@@ -92,7 +92,7 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
