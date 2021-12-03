@@ -11,6 +11,8 @@ namespace CookingBook.Models
         [Key]
         public int InstructionID { get; set; }
         public int RecipeID { get; set; }
+
+        [Required]
         public string InstructionText { get; set; }
     }
 }
