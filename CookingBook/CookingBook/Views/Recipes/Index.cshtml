@@ -54,13 +54,13 @@
                 <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
-                @*info sectiont for instructions
+                @*info section for instructions
                   points the user to details page to view instructions string*@
                 <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
             </td>
         </tr>

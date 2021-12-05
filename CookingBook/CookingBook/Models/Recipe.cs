@@ -11,33 +11,35 @@ namespace CookingBook.Models
     {
         [Key]//primary key
         public int RecipeID { get; set; }
-       // [Required]
+
+        [Required]
+        [StringLength(60, MinimumLength = 3)]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
         public string Name { get; set; }
-        public int TotalTime { get; set; } //optional
 
-        [EnumDataType(typeof(DifficultyType)), Display(Name = "Difficulty")]
+        [Display(Name = "Total Time (in minutes)")]
+        [Range(1, 1000)]
+        public int TotalTime { get; set; }
+
+        public enum DifficultyType { Easy, Moderate, Difficult, Expert }
+
         public DifficultyType Difficulty { get; set; }
-        public DateTime DateCreated { get; set; }//optional
 
 
-        //[Required]
+        [Display(Name = "Date Created")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateCreated { get; set; }
+
+
+        [Required]
         [Display(Name ="Instructions")]
         public Instruction Instructions { get; set; }
 
-        //[Required]
+        [Required]
         [Display(Name = "Ingredients")]
-        public Ingredient Ingredients { get; set; } //needs to be a collection 
+        public Ingredient Ingredients { get; set; }
 
 
     }
-    public enum DifficultyType { 
-        [Display(Name = "Easy")]
-        Easy,
-        [Display(Name = "Moderate")]
-        Moderate,
-        [Display(Name = "difficult")]
-        Difficult,
-        [Display(Name = "Expert")]
-        Expert 
-    } //optional
 }
