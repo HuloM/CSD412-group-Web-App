@@ -31,17 +31,14 @@ namespace CookingBook.Controllers
 
         // GET: Recipes/Search/
         public async Task<IActionResult> Search(string query)
-        {
-            IEnumerable<CookingBook.Models.Recipe> recipes = new List<CookingBook.Models.Recipe>();
-            recipes = recipes.Concat(await getDBInformation(query)).ToList();
-            recipes = recipes.Concat(await getAPIInformation(query)).ToList();
-            return View(recipes);
+        {   
+            return View( new SearchViewModel{ DBObject = await getDBInformation(query), APIObject = await getAPIInformation(query) });
         }
 
         // Helper function
-        public async Task<IEnumerable<CookingBook.Models.Recipe>> getAPIInformation(string query )
+        public async Task<IEnumerable<CookingBook.Models.APIRecipe>> getAPIInformation(string query )
         {
-            IEnumerable<CookingBook.Models.Recipe> recipes = new List<CookingBook.Models.Recipe>();
+            IEnumerable<CookingBook.Models.APIRecipe> recipes = new List<CookingBook.Models.APIRecipe>();
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
@@ -66,7 +63,7 @@ namespace CookingBook.Controllers
                 foreach (var result in jsonConversion.results)
                 {
                     // Add to the list of recipes
-                    recipes = recipes.Append(new Recipe
+                    recipes = recipes.Append(new APIRecipe
                     {
                         Name = result.ContainsKey("name") ? result.name.ToString() : null,
                         TotalTime = result.ContainsKey("total_time_minutes") ? (!String.IsNullOrEmpty(result.total_time_minutes.ToString()) && int.TryParse(result.total_time_minutes.ToString(), out int test) ? int.Parse(result.total_time_minutes.ToString()) : 0) : 0,
@@ -91,7 +88,7 @@ namespace CookingBook.Controllers
                             ingredient = ((Func<string>)(() =>
                             {
                                 string ingredients = "";
-                                int section = 0;
+                                int section = 1;
                                 foreach (var sections in result.sections)
                                 {
                                     ingredients += "Section " + section + ": \n";
@@ -100,6 +97,7 @@ namespace CookingBook.Controllers
                                         ingredients += ingredient.raw_text.ToString() + "\n";
                                     }
                                     ingredients += "\n";
+                                    section += 1;
                                 }
 
                                 return ingredients;
@@ -107,7 +105,8 @@ namespace CookingBook.Controllers
                         } : new Models.Ingredient
                         {
                             ingredient = "None Provided",
-                        }
+                        },
+                        VideoString = result.ContainsKey("renditions") && result.renditions.HasValues && result.renditions[0].ContainsKey("url") ? result.renditions[0].url.ToString() : ""
                     }).ToList();
                 }
                 return recipes;

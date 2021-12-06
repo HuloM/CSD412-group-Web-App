@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CookingBook.Models.Recipe>
+﻿@model SearchViewModel
 
 @{
     ViewData["Title"] = "Recipe Search";
@@ -7,64 +7,86 @@
 <h1>Search</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TotalTime)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.TotalTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Difficulty)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.Difficulty)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ingredients)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.Ingredients)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Instructions)
+                @Html.DisplayNameFor(model => model.RecipeTemplate.Instructions)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.DBObject)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Difficulty)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateCreated)
-                </td>
-                <td>
-                    @*info section for ingredients
-                        points the user to details page to view ingredients string*@
-                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
-                </td>
-                <td>
-                    @*info sectiont for instructions
-                        points the user to details page to view instructions string*@
-                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Difficulty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
+            </td>
+        </tr>
+        }
+
+        @foreach (var item in Model.APIObject)
+        {
+        <tr>
+            <td>
+                <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Difficulty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
+            </td>
+            <td>
+                <a href="@item.VideoString" target="_blank">Video Link</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
