@@ -60,5 +60,28 @@ namespace CookingBookTest
             Assert.Equal("Add one tea spoon", instruction.InstructionText);
         }
 
+        [Fact]
+        public void RecipeFactTest()
+        {
+            Recipe recipe = new Recipe();
+            recipe.RecipeID = 1;
+            recipe.Name = "Cheese cake";
+            recipe.TotalTime = 60;
+            recipe.Difficulty = Recipe.DifficultyType.Moderate;
+            recipe.DateCreated = new DateTime(2021, 12, 05);
+            Instruction instruction = new Instruction() { InstructionID = 1, RecipeID = 3, InstructionText = "Put in Oven" };
+            Ingredient ingredient = new Ingredient() { IngredientID = 1, RecipeID = 3, ingredient = "Cheese" };
+            recipe.Instructions = instruction;
+            recipe.Ingredients = ingredient;
+
+            Assert.Equal(1, recipe.RecipeID);
+            Assert.Equal("Cheese cake", recipe.Name);
+            Assert.Equal(60, recipe.TotalTime);
+            Assert.Equal(Recipe.DifficultyType.Moderate, recipe.Difficulty);
+            Assert.Equal(new DateTime(2021, 12, 05), recipe.DateCreated);
+            Assert.Equal(instruction, recipe.Instructions);
+            Assert.Equal(ingredient, recipe.Ingredients);
+        }
+
     }
 }
