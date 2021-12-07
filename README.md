@@ -1,2 +1,3 @@
-# CSD412-group-Web-App
-group web app as part of a project for a class
+# CSD412-group-Web-App **Recipe App**
+
+Matt Dubray, Spencer Hirata, Joy [Han] Ji, Natalia Solar
