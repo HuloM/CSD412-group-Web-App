@@ -11,7 +11,8 @@ namespace CookingBook.Models
     {
         [Key]//primary key
         public int RecipeID { get; set; }
-
+        // user ID from AspNetUser table.
+        public string? OwnerID { get; set; }
         [Required]
         [StringLength(60, MinimumLength = 3)]
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]

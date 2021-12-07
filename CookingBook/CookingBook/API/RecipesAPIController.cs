@@ -12,6 +12,7 @@ namespace CookingBook.API
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class RecipesAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
