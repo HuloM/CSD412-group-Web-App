@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CookingBook.Data;
 using CookingBook.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CookingBook.Controllers
 {
+    [Authorize]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,6 +23,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Recipe
@@ -125,6 +128,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -188,7 +192,7 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
