@@ -35,24 +35,24 @@
     <tbody>
         @foreach (var item in Model.DBObject)
         {
-        <tr>
+        <tr class="collapsible">
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                <div>@Html.DisplayFor(modelItem => item.Name)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalTime)
+                <div>@Html.DisplayFor(modelItem => item.TotalTime)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
+                <div>@Html.DisplayFor(modelItem => item.Difficulty)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+                <div>@Html.DisplayFor(modelItem => item.DateCreated)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
+                <div>@Html.DisplayFor(modelItem => item.Ingredients.ingredient)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
+                <div>@Html.DisplayFor(modelItem => item.Instructions.InstructionText)</div>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
@@ -64,28 +64,32 @@
 
         @foreach (var item in Model.APIObject)
         {
-        <tr>
+        <tr class="collapsible">
             <td>
                 <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalTime)
+                <div>@Html.DisplayFor(modelItem => item.TotalTime)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
+                <div>@Html.DisplayFor(modelItem => item.Difficulty)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+                <div>@Html.DisplayFor(modelItem => item.DateCreated)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
+                <div>@Html.DisplayFor(modelItem => item.Ingredients.ingredient)</div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
+                <div>@Html.DisplayFor(modelItem => item.Instructions.InstructionText)</div>
             </td>
-            <td>
-                <a href="@item.VideoString" target="_blank">Video Link</a>
-            </td>
+            @if (item.VideoString != "")
+                {
+                    <td>
+                        <div><a href="@item.VideoString" target="_blank">Video Link</a></div>
+                    </td>
+                }
+
         </tr>
         }
     </tbody>
