@@ -82,6 +82,5 @@ namespace CookingBookTest
             Assert.Equal(instruction, recipe.Instructions);
             Assert.Equal(ingredient, recipe.Ingredients);
         }
-
     }
 }

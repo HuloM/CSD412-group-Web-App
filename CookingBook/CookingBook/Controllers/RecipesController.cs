@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CookingBook.Data;
 using CookingBook.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CookingBook.Controllers
 {
+    [Authorize]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +22,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes
+        
         public async Task<IActionResult> Index()
         {
             return View(await _context.Recipe
@@ -29,6 +32,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
