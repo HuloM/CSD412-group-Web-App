@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Recipe Search";
 }
+@using System.Security.Claims;
 
 <h1>Search</h1>
 
@@ -35,58 +36,82 @@
     <tbody>
         @foreach (var item in Model.DBObject)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    <!--details button to lead user to ingredient-->
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+                <td>
+                    <!--details button to lead user to instructions-->
+
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+                <td>
+                    @{
+                        var userIdValue = "";
+                        var claimsIdentity = User.Identity as ClaimsIdentity;
+                        if (claimsIdentity != null)
+                        {
+                            // the principal identity is a claims identity.
+                            // now we need to find the NameIdentifier claim
+                            var userIdClaim = claimsIdentity.Claims
+                                .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                            if (userIdClaim != null)
+                            {
+                                userIdValue = userIdClaim.Value;
+                            }
+                        }
+
+                        if (item.OwnerID == userIdValue)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
+
+                            <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
+                        }
+                    }
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+            </tr>
         }
 
         @foreach (var item in Model.APIObject)
         {
-        <tr>
-            <td>
-                <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
-            </td>
-            <td>
-                <a href="@item.VideoString" target="_blank">Video Link</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ingredients.ingredient)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Instructions.InstructionText)
+                </td>
+                <td>
+                    <a href="@item.VideoString" target="_blank">Video Link</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
