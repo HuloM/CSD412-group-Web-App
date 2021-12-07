@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using CookingBook.Data;
 using CookingBook.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Diagnostics;
 
 namespace CookingBook.Controllers
 {
@@ -26,7 +28,25 @@ namespace CookingBook.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            var userIdValue = "";
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            if (claimsIdentity != null)
+            {
+                // the principal identity is a claims identity.
+                // now we need to find the NameIdentifier claim
+                var userIdClaim = claimsIdentity.Claims
+                    .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                if (userIdClaim != null)
+                {
+                    userIdValue = userIdClaim.Value;
+                    Debug.WriteLine(userIdClaim.Value);
+                }
+            }
+
+
             return View(await _context.Recipe
+                .Where(r => r.OwnerID == userIdValue)
                 .Include(r => r.Instructions)
                 .Include(r => r.Ingredients)
                 .ToListAsync());
@@ -170,6 +190,23 @@ namespace CookingBook.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userIdValue = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    // the principal identity is a claims identity.
+                    // now we need to find the NameIdentifier claim
+                    var userIdClaim = claimsIdentity.Claims
+                        .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                    if (userIdClaim != null)
+                    {
+                        userIdValue = userIdClaim.Value;
+                        Debug.WriteLine(userIdClaim.Value);
+                    }
+                }
+
+                recipe.OwnerID = userIdValue;
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
