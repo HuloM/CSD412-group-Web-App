@@ -19,7 +19,7 @@ namespace CookingBook.Models
         public string Name { get; set; }
 
         [Display(Name = "Total Time (in minutes)")]
-        [Range(1, 1000)]
+        [Range(0, 1000)]
         public int TotalTime { get; set; }
 
         public enum DifficultyType { Easy, Moderate, Difficult, Expert }
@@ -28,8 +28,8 @@ namespace CookingBook.Models
 
 
         [Display(Name = "Date Created")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        //[DataType(DataType.Date)]
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateCreated { get; set; }
 
 

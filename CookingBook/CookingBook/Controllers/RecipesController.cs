@@ -55,7 +55,7 @@ namespace CookingBook.Controllers
                 Headers =
             {
                 { "x-rapidapi-host", "tasty.p.rapidapi.com" },
-                { "x-rapidapi-key", "de25df93c4mshf438aee8873b819p11c9b0jsnd5d5969cc347" },
+                { "x-rapidapi-key", Environment.GetEnvironmentVariable("APIKey") },
             },
             };
             using (var response = await client.SendAsync(request))
@@ -173,8 +173,6 @@ namespace CookingBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-
                 recipe.OwnerID = GetUserId();
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
