@@ -8,9 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CookingBook.Data;
 using CookingBook.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Diagnostics;
 
 namespace CookingBook.Controllers
 {
+    //[Authorize]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,21 +25,25 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Recipe
+                .Where(r => r.OwnerID == GetUserId())
                 .Include(r => r.Instructions)
                 .Include(r => r.Ingredients)
                 .ToListAsync());
         }
 
         // GET: Recipes/Search/
+        [AllowAnonymous]
         public async Task<IActionResult> Search(string query)
         {   
             return View( new SearchViewModel{ DBObject = await getDBInformation(query), APIObject = await getAPIInformation(query) });
         }
 
         // Helper function
+        [AllowAnonymous]
         public async Task<IEnumerable<CookingBook.Models.APIRecipe>> getAPIInformation(string query )
         {
             IEnumerable<CookingBook.Models.APIRecipe> recipes = new List<CookingBook.Models.APIRecipe>();
@@ -113,7 +121,9 @@ namespace CookingBook.Controllers
             }
         }
 
+
         // Helper function
+        [AllowAnonymous]
         public async Task<IEnumerable<CookingBook.Models.Recipe>> getDBInformation(string query) {
             IEnumerable<CookingBook.Models.Recipe> recipes = await _context.Recipe.Where(p =>
             p.Name.Contains(query) || p.Ingredients.ingredient.Contains(query))
@@ -125,6 +135,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -146,6 +157,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -156,10 +168,12 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Instructions")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
+                recipe.OwnerID = GetUserId();
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -168,6 +182,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -188,7 +203,8 @@ namespace CookingBook.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated")] Recipe recipe)
+        [Authorize]
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
@@ -219,6 +235,7 @@ namespace CookingBook.Controllers
         }
 
         // GET: Recipes/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -239,6 +256,7 @@ namespace CookingBook.Controllers
         // POST: Recipes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var recipe = await _context.Recipe.FindAsync(id);
@@ -251,5 +269,29 @@ namespace CookingBook.Controllers
         {
             return _context.Recipe.Any(e => e.RecipeID == id);
         }
+
+        private string GetUserId()
+        {
+            //function to retrieve current user ID
+
+            var userIdValue = "";
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            if (claimsIdentity != null)
+            {
+                // the principal identity is a claims identity.
+                // now we need to find the NameIdentifier claim
+                var userIdClaim = claimsIdentity.Claims
+                    .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                if (userIdClaim != null)
+                {
+                    userIdValue = userIdClaim.Value;
+                    Debug.WriteLine(userIdClaim.Value);
+                }
+
+            }
+            return userIdValue;
+        }
+
     }
 }

@@ -30,6 +30,7 @@ namespace CookingBook.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ingredient")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IngredientID");
@@ -48,6 +49,7 @@ namespace CookingBook.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("InstructionText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RecipeID")
@@ -75,6 +77,11 @@ namespace CookingBook.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(60)")
+                        .HasMaxLength(60);
+
+                    b.Property<string>("OwnerID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalTime")

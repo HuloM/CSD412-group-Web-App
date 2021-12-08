@@ -4,6 +4,8 @@
     ViewData["Title"] = "Recipe Search";
 }
 
+@using System.Security.Claims;
+
 <h1>Search</h1>
 
 <p>
@@ -35,60 +37,118 @@
     <tbody>
         @foreach (var item in Model.DBObject)
         {
-        <tr class="collapsible">
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Name)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.TotalTime)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Difficulty)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.DateCreated)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Ingredients.ingredient)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Instructions.InstructionText)</div>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
-            </td>
-        </tr>
+            <tr class="collapsible">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    <!--details button to lead user to ingredient-->
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+                <td>
+                    <!--details button to lead user to instructions-->
+
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+                <td>
+                    @{
+
+                        //function to retrieve current user ID
+
+                        var userIdValue = "";
+                        var claimsIdentity = User.Identity as ClaimsIdentity;
+                        if (claimsIdentity != null)
+                        {
+                            // the principal identity is a claims identity.
+                            // now we need to find the NameIdentifier claim
+                            var userIdClaim = claimsIdentity.Claims
+                                .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                            if (userIdClaim != null)
+                            {
+                                userIdValue = userIdClaim.Value;
+                            }
+                        }
+
+                        if (item.OwnerID == userIdValue)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.RecipeID">Edit</a>
+
+                            <a asp-action="Delete" asp-route-id="@item.RecipeID">Delete</a>
+                        }
+                    }
+                    <a asp-action="Details" asp-route-id="@item.RecipeID">Details</a>
+                </td>
+            </tr>
         }
 
         @foreach (var item in Model.APIObject)
         {
-        <tr class="collapsible">
-            <td>
-                <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.TotalTime)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Difficulty)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.DateCreated)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Ingredients.ingredient)</div>
-            </td>
-            <td>
-                <div>@Html.DisplayFor(modelItem => item.Instructions.InstructionText)</div>
-            </td>
+    <tr class="collapsible">
+        <td>
+            <a href="https://rapidapi.com/apidojo/api/tasty/" target="_blank">TastyAPI:</a> @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            <div>@Html.DisplayFor(modelItem => item.TotalTime)</div>
+        </td>
+        <td>
+            <div>@Html.DisplayFor(modelItem => item.Difficulty)</div>
+        </td>
+        <td>
+            <div>@Html.DisplayFor(modelItem => item.DateCreated)</div>
+        </td>
+        <td>
+            <div>@Html.DisplayFor(modelItem => item.Ingredients.ingredient)</div>
+        </td>
+        <td>
+            <div>@Html.DisplayFor(modelItem => item.Instructions.InstructionText)</div>
+        </td>
+        <td>
             @if (item.VideoString != "")
-                {
-                    <td>
-                        <div><a href="@item.VideoString" target="_blank">Video Link</a></div>
-                    </td>
-                }
+            {
+                <div><a href="@item.VideoString" target="_blank">Video Link</a></div>
+            }
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label hidden for="Name" class="control-label"></label>
+                    <input type="hidden" name="Name" class="form-control" value="@item.Name"/>
+                </div>
+                <div class="form-group">
+                    <label hidden for="TotalTime" class="control-label"></label>
+                    <input type="hidden" name="TotalTime" class="form-control" value="@item.TotalTime"/>
+                </div>
+                <div class="form-group">
+                    <label hidden for="Difficulty" class="control-label"></label>
+                    <input type="hidden" name="Difficulty" asp-items="Html.GetEnumSelectList<Recipe.DifficultyType>()" class="form-control" value="@Recipe.DifficultyType.Easy"/>
+                </div>
+                <div class="form-group">
+                    <label hidden for="DateCreated" class="control-label"></label>
+                    <input type="hidden" name="DateCreated" class="form-control" value="@item.DateCreated"/>
+                </div>
+                <div class="form-group">
+                    <label hidden for="Ingredients" class="control-label"></label>
+                    <input type="hidden" name="Ingredients.ingredient" class="form-control" value="@item.Ingredients.ingredient" />
+                </div> 
+                <div class="form-group">
+                    <label hidden for="Instructions.InstructionText" class="control-label"></label>
+                    <input type="hidden" name="Instructions.InstructionText" class="form-control" value="@item.Instructions.InstructionText"/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </td>
+
 
         </tr>
         }
