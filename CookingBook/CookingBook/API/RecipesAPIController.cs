@@ -51,7 +51,7 @@ namespace CookingBook.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Instructions")] Recipe recipe)
+        public async Task<IActionResult> PutRecipe(int id, [FromBody] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
@@ -83,8 +83,11 @@ namespace CookingBook.API
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe([Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Instructions")] Recipe recipe)
+        public async Task<ActionResult<Recipe>> PostRecipe([FromBody] Recipe recipe)
         {
+            recipe.RecipeID = 0;
+            recipe.Ingredients.IngredientID = 0;
+            recipe.Instructions.InstructionID = 0;
             _context.Recipe.Add(recipe);
             await _context.SaveChangesAsync();
 
