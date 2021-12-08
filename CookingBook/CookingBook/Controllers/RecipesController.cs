@@ -190,7 +190,12 @@ namespace CookingBook.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.Recipe
+                .Include(r => r.Instructions)
+                .Include(r => r.Ingredients)
+                .FirstOrDefaultAsync(r => r.RecipeID == id);
+            ;
+
             if (recipe == null)
             {
                 return NotFound();
@@ -204,7 +209,7 @@ namespace CookingBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Instructions")] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
@@ -215,6 +220,7 @@ namespace CookingBook.Controllers
             {
                 try
                 {
+                    recipe.OwnerID = GetUserId();
                     _context.Update(recipe);
                     await _context.SaveChangesAsync();
                 }
@@ -244,6 +250,8 @@ namespace CookingBook.Controllers
             }
 
             var recipe = await _context.Recipe
+                .Include(r => r.Instructions)
+                .Include(r => r.Ingredients)
                 .FirstOrDefaultAsync(m => m.RecipeID == id);
             if (recipe == null)
             {

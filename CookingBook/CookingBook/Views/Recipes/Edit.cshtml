@@ -3,11 +3,6 @@
 @{
     ViewData["Title"] = "Edit";
 }
-@using (Html.BeginForm())
-{
-    @Html.HiddenFor(i => i.Ingredients.IngredientID)
-    @Html.HiddenFor(i => i.Instructions.InstructionID)
-}
 <h1>Edit</h1>
 
 <h4>Recipe</h4>
@@ -17,6 +12,9 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="RecipeID" />
+            <input type="hidden" asp-for="Ingredients.IngredientID" />
+            <input type="hidden" asp-for="Instructions.InstructionID" />
+            <input type="hidden" asp-for="OwnerID" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
