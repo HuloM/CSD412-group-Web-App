@@ -55,7 +55,7 @@ namespace CookingBook.Controllers
                 Headers =
             {
                 { "x-rapidapi-host", "tasty.p.rapidapi.com" },
-                { "x-rapidapi-key", Environment.GetEnvironmentVariable("APIKey") },
+                { "x-rapidapi-key", "de25df93c4mshf438aee8873b819p11c9b0jsnd5d5969cc347" },
             },
             };
             using (var response = await client.SendAsync(request))
@@ -204,13 +204,13 @@ namespace CookingBook.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("RecipeID,Name,TotalTime,Difficulty,DateCreated,Ingredients,Ingredients.ingredient,Instructions.InstructionText")] Recipe recipe)
         {
             if (id != recipe.RecipeID)
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 try
